@@ -1,5 +1,5 @@
 import { Search, Heart, ShoppingCart, User } from "lucide-react";
-import Connect from "./buttons/connect";
+import Connect from "./buttons/Connect";
 
 export default function Header() {
   return (

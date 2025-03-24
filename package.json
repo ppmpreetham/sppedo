@@ -17,10 +17,12 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scroll": "^1.9.2",
-    "simplex-noise": "^4.0.3"
+    "simplex-noise": "^4.0.3",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/node": "22.13.13",
     "eslint": "^9",
     "eslint-config-next": "15.1.1",
     "postcss": "^8",
