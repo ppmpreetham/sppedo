@@ -25,7 +25,7 @@ export function Player() {
   const sideVector = useRef(new THREE.Vector3());
 
   useFrame((state, delta) => {
-    const { forward, backward, right, left } = getKeys();
+    const { forward, backward, left, right } = getKeys();
 
     // Get camera direction vectors
     camera.getWorldDirection(frontVector.current);
