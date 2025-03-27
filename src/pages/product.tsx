@@ -19,6 +19,7 @@ export default function ProductPage() {
   const { id } = router.query;
   const clothingItems = useStore((state) => state.clothingItems);
   const addToCart = useStore((state) => state.addToCart);
+  const cartItems = useStore((state) => state.user.cartItems); // Add this line to get cart items
 
   const [selectedSize, setSelectedSize] = useState("");
   const [product, setProduct] = useState<{
@@ -50,9 +51,19 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     if (selectedSize) {
-      addToCart(product);
+      // Create a new product object with the selected size
+      const productWithSize = {
+        ...product,
+        selectedSize: selectedSize,
+      };
+
+      addToCart(productWithSize);
+
       // Show success message
       alert(`${product.name} added to your cart!`);
+
+      // Reset size selection (optional)
+      setSelectedSize("");
     }
   };
 
@@ -64,12 +75,21 @@ export default function ProductPage() {
       </Head>
 
       <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
+        <div className="flex justify-between items-center mb-8">
           <Link
             href="/shop"
             className="text-blue-400 hover:underline flex items-center"
           >
             ← Back to Store
+          </Link>
+          <Link
+            href="/cart"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
+          >
+            <span className="mr-2">Cart</span>
+            <span className="bg-white text-blue-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+              {cartItems.length}
+            </span>
           </Link>
         </div>
 

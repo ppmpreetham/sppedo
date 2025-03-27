@@ -12,6 +12,7 @@ interface StoreState {
   selectItem: (item: ClothingItem | null) => void;
   addToCart: (item: ClothingItem) => void;
   removeFromCart: (itemId: string) => void;
+  clearCart: () => void; // New function to clear the cart
 }
 
 export const useStore = create<StoreState>((set) => ({
@@ -124,14 +125,27 @@ export const useStore = create<StoreState>((set) => ({
     set((state) => ({
       user: {
         ...state.user,
-        cartItems: [...state.user.cartItems, item],
+        // Add the item to cart, creating a unique ID with timestamp to support duplicates
+        cartItems: [
+          ...state.user.cartItems,
+          { ...item, cartId: `${item.id}-${Date.now()}` },
+        ],
       },
     })),
   removeFromCart: (itemId) =>
     set((state) => ({
       user: {
         ...state.user,
-        cartItems: state.user.cartItems.filter((item) => item.id !== itemId),
+        cartItems: state.user.cartItems.filter(
+          (item) => (item.cartId || item.id) !== itemId
+        ),
+      },
+    })),
+  clearCart: () =>
+    set((state) => ({
+      user: {
+        ...state.user,
+        cartItems: [],
       },
     })),
 }));
