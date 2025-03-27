@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -19,20 +19,26 @@ const colorMap = {
 export default function ProductModel({ modelPath, color }: ProductModelProps) {
   const { scene } = useGLTF(modelPath);
   const modelRef = useRef<THREE.Object3D | null>(null);
+  const [clonedScene] = useState(() => scene.clone());
 
   useEffect(() => {
-    if (scene) {
-      scene.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.material) {
-          const colorHex = colorMap[color] || "#ffffff";
+    if (clonedScene) {
+      // Get the hexadecimal color value
+      const colorHex = colorMap[color] || "#ffffff";
 
+      // Apply color to all meshes in the model
+      clonedScene.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+          // For materials array
           if (Array.isArray(child.material)) {
             child.material = child.material.map((mat) => {
               const newMat = mat.clone();
               newMat.color.set(colorHex);
               return newMat;
             });
-          } else {
+          }
+          // For single material
+          else {
             const material = child.material.clone();
             material.color.set(colorHex);
             child.material = material;
@@ -40,13 +46,18 @@ export default function ProductModel({ modelPath, color }: ProductModelProps) {
         }
       });
     }
-  }, [scene, color]);
+  }, [clonedScene, color]); // Make sure to re-run when color changes
 
   return (
-    <primitive ref={modelRef} object={scene.clone()} scale={[1.5, 1.5, 1.5]} />
+    <primitive
+      ref={modelRef}
+      object={clonedScene}
+      scale={[1.5, 1.5, 1.5]}
+      position={[0, -0.5, 0]}
+    />
   );
 }
 
 // Preload models to improve performance
-useGLTF.preload("../../../models/tshirt.glb");
-useGLTF.preload("../../../models/jeans.glb");
+useGLTF.preload("/models/tshirt.glb");
+useGLTF.preload("/models/jeans.glb");

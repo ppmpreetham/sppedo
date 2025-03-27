@@ -1,9 +1,10 @@
-import { useRef, useEffect, useState } from "react";
-import { useGLTF, useAnimations, Html } from "@react-three/drei";
+import { useRef, useState, useEffect } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
 import { useStore } from "../../store/store";
-import { ClothingItem } from "@/types";
-import * as THREE from "three";
 import { useRouter } from "next/router";
+import * as THREE from "three";
+import { ClothingItem } from "../../types";
+import { useFrame } from "@react-three/fiber";
 
 type ClothingModelProps = {
   item: ClothingItem;
@@ -38,61 +39,96 @@ export function ClothingModel({
   const modelRef = useRef<THREE.Group>(null);
   const { actions } = useAnimations(animations, modelRef);
   const [hovered, setHovered] = useState(false);
+  const [clonedScene] = useState(() => scene.clone());
 
+  // Create an object for smooth animation
+  const animatedScale = useRef({
+    x: scale[0],
+    y: scale[1],
+    z: scale[2],
+  });
+
+  // Apply color to the model right away when the component mounts
   useEffect(() => {
-    // Play any animations if needed
-    if (actions && actions.idle) {
-      actions.idle.play();
-    }
-
     // Apply the color to the model
-    if (scene) {
-      scene.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.material) {
-          const color = colorMap[item.color] || "#ffffff";
+    if (clonedScene) {
+      const colorHex = colorMap[item.color] || "#ffffff";
 
-          // If the material is an array, iterate through it
+      clonedScene.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
           if (Array.isArray(child.material)) {
             child.material = child.material.map((mat) => {
               const newMat = mat.clone();
-              newMat.color.set(color);
+              newMat.color.set(colorHex);
               return newMat;
             });
           } else {
-            // Clone the material to avoid affecting other instances
             const material = child.material.clone();
-            material.color.set(color);
+            material.color.set(colorHex);
             child.material = material;
           }
         }
       });
     }
-  }, [actions, scene, item.color]);
 
-  // Add hover effect
-  useEffect(() => {
-    if (modelRef.current) {
-      const scaleFactor = hovered ? 1.1 : 1;
-      modelRef.current.scale.set(
-        scale[0] * scaleFactor,
-        scale[1] * scaleFactor,
-        scale[2] * scaleFactor
-      );
+    // Play animations if available
+    if (actions && actions.idle) {
+      actions.idle.play();
     }
+  }, [clonedScene, item.color, actions]);
 
-    // Pass hover state to parent
-    if (onHover) {
-      onHover(hovered ? item : null);
-    }
-  }, [hovered, scale, item, onHover]);
+  // Smooth transition for hover effect using useFrame
+  useFrame((state, delta) => {
+    if (!modelRef.current) return;
+
+    const targetScale = hovered ? 1.2 : 1.0;
+
+    // Smooth interpolation for scale
+    animatedScale.current.x = THREE.MathUtils.lerp(
+      animatedScale.current.x,
+      scale[0] * targetScale,
+      delta * 4 // Adjust this value to control animation speed
+    );
+
+    animatedScale.current.y = THREE.MathUtils.lerp(
+      animatedScale.current.y,
+      scale[1] * targetScale,
+      delta * 4
+    );
+
+    animatedScale.current.z = THREE.MathUtils.lerp(
+      animatedScale.current.z,
+      scale[2] * targetScale,
+      delta * 4
+    );
+
+    // Apply the animated scale
+    modelRef.current.scale.set(
+      animatedScale.current.x,
+      animatedScale.current.y,
+      animatedScale.current.z
+    );
+  });
+
+  const handlePointerOver = (e) => {
+    e.stopPropagation();
+    setHovered(true);
+    // Make sure to call onHover with the item
+    if (onHover) onHover(item);
+  };
+
+  const handlePointerOut = (e) => {
+    e.stopPropagation();
+    setHovered(false);
+    // Clear the hovered item
+    if (onHover) onHover(null);
+  };
 
   const handleClick = (e) => {
     e.stopPropagation();
     selectItem(item);
-
     // Navigate to product page with correct query parameter
     router.push(`/product?id=${item.id}`);
-
     if (onClick) onClick();
   };
 
@@ -101,30 +137,15 @@ export function ClothingModel({
       ref={modelRef}
       position={position}
       rotation={rotation}
-      scale={scale}
       onClick={handleClick}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
     >
-      <primitive object={scene.clone()} />
-
-      {/* Item label */}
-      <mesh position={[0, 2, 0]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[1, 0.3]} />
-        <meshBasicMaterial
-          color="white"
-          opacity={hovered ? 0.9 : 0.6}
-          transparent
-          side={THREE.DoubleSide}
-        />
-        <Html position={[0, 0, 0]} center>
-          <div className="text-black text-xs font-bold">{item.name}</div>
-        </Html>
-      </mesh>
+      <primitive object={clonedScene} />
     </group>
   );
 }
 
 // Preload models to improve performance
-useGLTF.preload("../../../models/tshirt.glb");
-useGLTF.preload("../../../models/jeans.glb");
+useGLTF.preload("/models/tshirt.glb");
+useGLTF.preload("/models/jeans.glb");
