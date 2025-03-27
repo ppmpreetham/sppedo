@@ -4,7 +4,7 @@ import Connect from "./buttons/Connect";
 export default function Header() {
   return (
     <header className="flex items-center justify-between px-4 py-2">
-      <h1 className="text-5xl">UNNAMED</h1>
+      <h1 className="text-5xl">SPPEDO</h1>
       <nav className="flex-1">
         <ul className="flex justify-center space-x-4">
           <li>
