@@ -146,7 +146,7 @@ export function StoreEnvironment() {
                 <meshStandardMaterial
                   color="#ffffff"
                   emissive="#ffffff"
-                  emissiveIntensity={2}
+                  emissiveIntensity={20}
                   transparent={true}
                   opacity={0.7}
                 />

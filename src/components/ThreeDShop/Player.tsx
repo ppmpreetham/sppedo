@@ -51,7 +51,7 @@ export function Player() {
     const moveSpeed = 5 * delta;
 
     // Calculate new position
-    let newPosition = [...position] as [number, number, number];
+    let newPosition = [position] as [number, number, number];
 
     if (direction.current.length() > 0) {
       newPosition[0] += direction.current.x * moveSpeed;
