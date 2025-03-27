@@ -7,6 +7,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import "../app/globals.css";
+import { ClothingItem } from "../types";
 
 // Import the ProductModel dynamically to avoid SSR issues
 const ProductModel = dynamic(
@@ -19,6 +20,9 @@ export default function ProductPage() {
   const { id } = router.query;
   const clothingItems = useStore((state) => state.clothingItems);
   const addToCart = useStore((state) => state.addToCart);
+
+  type ClothingItemWithSize = ClothingItem & { selectedSize: string };
+  const cartItems = useStore((state) => state.user.cartItems);
 
   const [selectedSize, setSelectedSize] = useState("");
   const [product, setProduct] = useState<{
@@ -34,7 +38,7 @@ export default function ProductPage() {
   // Find the product by ID once the query param is available
   useEffect(() => {
     if (id && clothingItems.length > 0) {
-      const foundProduct = clothingItems.find((item) => item.id === id);
+      const foundProduct = clothingItems.find((item) => item.id === id) || null;
       setProduct(foundProduct);
     }
   }, [id, clothingItems]);
@@ -49,11 +53,26 @@ export default function ProductPage() {
   }
 
   const handleAddToCart = () => {
-    if (selectedSize) {
-      addToCart(product);
-      // Show success message
-      alert(`${product.name} added to your cart!`);
+    if (!selectedSize) {
+      alert("Please select a size first");
+      return;
     }
+
+    addToCart({
+      ...product,
+      selectedSize, // Store the selected size with the product
+    } as ClothingItemWithSize);
+
+    // Save to localStorage
+    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    existingCart.push({
+      ...product,
+      selectedSize,
+    });
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+
+    // Show success message
+    alert(`${product.name} added to your cart!`);
   };
 
   return (
@@ -63,8 +82,54 @@ export default function ProductPage() {
         <meta name="description" content={product.description} />
       </Head>
 
-      <div className="container mx-auto py-8 px-4">
-        <div className="mb-8">
+      {/* Navigation bar with cart and home buttons */}
+      <div className="fixed top-0 left-0 w-full bg-gray-900 border-b border-gray-800 z-10">
+        <div className="container mx-auto py-3 px-4 flex justify-between items-center">
+          <Link href="/shop" className="flex items-center text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+              />
+            </svg>
+            Home
+          </Link>
+
+          <Link href="/cart" className="flex items-center text-white relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            Cart
+            {cartItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                {cartItems.length}
+              </span>
+            )}
+          </Link>
+        </div>
+      </div>
+
+      <div className="container mx-auto py-20 px-4">
+        <div className="mb-8 mt-8">
           <Link
             href="/shop"
             className="text-blue-400 hover:underline flex items-center"
@@ -132,6 +197,22 @@ export default function ProductPage() {
             >
               Add to Cart
             </button>
+
+            {/* Action Buttons */}
+            <div className="mt-6 grid grid-cols-2 gap-4">
+              <Link
+                href="/cart"
+                className="py-3 px-4 bg-gray-800 hover:bg-gray-700 text-white rounded-md text-center"
+              >
+                View Cart
+              </Link>
+              <Link
+                href="/shop"
+                className="py-3 px-4 bg-gray-800 hover:bg-gray-700 text-white rounded-md text-center"
+              >
+                Continue Shopping
+              </Link>
+            </div>
           </div>
 
           {/* 3D Model - RIGHT */}
