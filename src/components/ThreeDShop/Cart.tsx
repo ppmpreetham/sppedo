@@ -32,7 +32,7 @@ export function Cart() {
       </div>
 
       {cartItems.length === 0 ? (
-        <p className="text-gray-500">Your cart is empty</p>
+        <p className="text-black">Your cart is empty</p>
       ) : (
         <>
           <ul className="divide-y divide-gray-200">
@@ -46,7 +46,7 @@ export function Cart() {
                   />
                   <div className="flex-1">
                     <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                    <p className="text-black">${item.price.toFixed(2)}</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.id)}

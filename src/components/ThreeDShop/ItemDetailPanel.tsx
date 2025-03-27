@@ -26,10 +26,10 @@ export function ItemDetailPanel() {
       <p className="text-lg font-semibold mb-2">
         ${selectedItem.price.toFixed(2)}
       </p>
-      <p className="text-gray-700 mb-4">{selectedItem.description}</p>
+      <p className="text-black mb-4">{selectedItem.description}</p>
 
       <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Select Size</label>
+        <label className="block text-black mb-2">Select Size</label>
         <div className="flex gap-2">
           {selectedItem.availableSizes.map((size) => (
             <button
