@@ -5,7 +5,9 @@ export default function Header() {
   return (
     <header className="flex items-center px-4 py-2">
       <div className="w-1/4">
-        <h1 className="text-5xl font-murmure">Sppedo</h1>
+        <h1 className="text-5xl font-murmure">
+          <a href="/">Sppedo</a>
+        </h1>
       </div>
       <nav className="w-2/4">
         <ul className="flex justify-center space-x-4">

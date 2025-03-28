@@ -51,13 +51,11 @@ const Profile = () => {
     };
   }, []);
 
-  // Load counts directly from localStorage
+  // Load counts from the Zustand store
   useEffect(() => {
     const updateCounts = () => {
-      // Get counts from localStorage
-      const cartItems = JSON.parse(
-        localStorage.getItem("sppedo_cart_items") || "[]"
-      );
+      // Get cart items from the store
+      const cartItems = useStore.getState().user.cartItems;
       const favorites = JSON.parse(
         localStorage.getItem("sppedo_favorites") || "[]"
       );
@@ -69,15 +67,15 @@ const Profile = () => {
     // Initial load
     updateCounts();
 
-    // Update counts when localStorage changes
-    window.addEventListener("storage", updateCounts);
+    // Set up a subscription to the store
+    const unsubscribe = useStore.subscribe(() => {
+      const cartItems = useStore.getState().user.cartItems;
+      updateCounts();
+    });
 
-    // Update counts every second to catch any changes
-    const interval = setInterval(updateCounts, 1000);
-
+    // Clean up subscription when component unmounts
     return () => {
-      window.removeEventListener("storage", updateCounts);
-      clearInterval(interval);
+      unsubscribe();
     };
   }, []);
 
@@ -229,7 +227,7 @@ const Profile = () => {
               </div>
 
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold mb-2">Sreeyansh Dhenavahi</h1>
+                <h1 className="text-3xl font-bold mb-2">Preetham Pemmasani</h1>
                 <div className="flex items-center gap-2 justify-center md:justify-start text-zinc-400">
                   <Wallet size={16} />
                   <span className="font-mono">

@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import "../app/globals.css";
 
-
 // Use dynamic import with SSR disabled for Three.js components
 const ShoppingMetaverse = dynamic(
   () =>
@@ -23,7 +22,6 @@ export default function Home() {
           content="Shop for clothes in a 3D virtual store"
         />
       </Head>
-      
 
       <main className="h-full w-full">
         <Suspense

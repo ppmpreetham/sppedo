@@ -4,7 +4,6 @@ import { ShoppingCart, Heart } from "lucide-react";
 import { useStore } from "../store/store";
 import "../app/globals.css";
 
-// Import GSAP in a way that works with SSR
 let gsap;
 let ScrollTrigger;
 
@@ -23,7 +22,6 @@ const Kids = () => {
   const toggleFavorite = useStore((state) => state.toggleFavorite);
   const favorites = useStore((state) => state.user.favorites);
 
-  // Create refs for animations
   const heroRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
   const funFactsRef = useRef<HTMLElement>(null);
@@ -33,23 +31,18 @@ const Kids = () => {
   const featuresRef = useRef<HTMLElement>(null);
   const featureItemRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // Initialize GSAP on client-side only
   useEffect(() => {
-    // Dynamically import GSAP only on the client
     const initGSAP = async () => {
       gsap = (await import("gsap")).default;
       ScrollTrigger = (await import("gsap/ScrollTrigger")).default;
 
-      // Register ScrollTrigger
       gsap.registerPlugin(ScrollTrigger);
 
-      // Now that GSAP is loaded, initialize animations
       initAnimations();
     };
 
     initGSAP();
 
-    // Cleanup function
     return () => {
       if (ScrollTrigger) {
         ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -57,9 +50,7 @@ const Kids = () => {
     };
   }, []);
 
-  // Function to handle all animations
   const initAnimations = () => {
-    // Hero section animations
     if (heroRef.current && heroContentRef.current) {
       gsap.fromTo(heroRef.current, { opacity: 0 }, { opacity: 1, duration: 1 });
 
@@ -70,7 +61,6 @@ const Kids = () => {
       );
     }
 
-    // Fun facts section animation
     if (funFactsRef.current) {
       gsap.fromTo(
         funFactsRef.current,
@@ -86,7 +76,6 @@ const Kids = () => {
         }
       );
 
-      // Animate individual fun fact items and add hover effects
       funFactItemRefs.current.forEach((item, index) => {
         if (item) {
           gsap.fromTo(
@@ -105,7 +94,6 @@ const Kids = () => {
             }
           );
 
-          // Add hover effect like in about.tsx
           gsap.set(item, { transformOrigin: "center" });
 
           const handleItemEnter = () => {
@@ -122,7 +110,6 @@ const Kids = () => {
       });
     }
 
-    // Parallax section animation
     if (parallaxRef.current && parallaxImageRef.current) {
       gsap.fromTo(
         parallaxRef.current,
@@ -153,7 +140,6 @@ const Kids = () => {
       );
     }
 
-    // Features section animation
     if (featuresRef.current) {
       featureItemRefs.current.forEach((item, index) => {
         if (item) {
@@ -173,7 +159,6 @@ const Kids = () => {
             }
           );
 
-          // Add hover effect like in about.tsx
           gsap.set(item, { transformOrigin: "center" });
 
           const handleItemEnter = () => {
@@ -191,12 +176,9 @@ const Kids = () => {
     }
   };
 
-  // Create a cleanup function for the hover effects to prevent memory leaks
   useEffect(() => {
     return () => {
-      // This will run when the component unmounts
       if (typeof window !== "undefined") {
-        // Clean up event listeners
         funFactItemRefs.current.forEach((item) => {
           if (item) {
             item.removeEventListener("mouseenter", () => {});
@@ -251,7 +233,6 @@ const Kids = () => {
       category: "tees",
       sizes: ["S", "M", "L", "XL"],
     },
-    // Add more products as needed
   ];
 
   const categories = [
@@ -271,7 +252,6 @@ const Kids = () => {
     <div className="min-h-screen bg-gradient-to-b from-black via-purple-900/20 to-black text-white">
       <Header />
 
-      {/* Hero Section */}
       <div ref={heroRef} className="relative h-screen overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-transparent z-10" />
         <img
@@ -294,7 +274,6 @@ const Kids = () => {
         </div>
       </div>
 
-      {/* Fun Facts Section */}
       <section
         ref={funFactsRef}
         className="py-24 bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20"
@@ -319,7 +298,6 @@ const Kids = () => {
         </div>
       </section>
 
-      {/* Parallax Image Section */}
       <section ref={parallaxRef} className="relative h-[50vh] overflow-hidden">
         <div ref={parallaxImageRef} className="absolute inset-0">
           <img
@@ -331,7 +309,6 @@ const Kids = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
       </section>
 
-      {/* Features Grid */}
       <section ref={featuresRef} className="py-24">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-16">
