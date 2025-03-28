@@ -103,17 +103,22 @@ export default function CartPage() {
     setTransactionStatus("Initiating transaction...");
 
     try {
-      // Convert price to wei (1 ETH = 10^18 wei)
-      const priceInEth = (totalPrice / 1500).toFixed(6); // Example conversion rate: 1 ETH = $1500 USD
+      // Original price calculation (commented out for testing)
+      // const priceInEth = (totalPrice / 1500).toFixed(6); // Example conversion rate: 1 ETH = $1500 USD
+      
+      // Fixed test amount: 0.001 ETH
+      const testPriceInEth = "0.001";
 
       // Create transaction parameters
       const transactionParameters = {
-        to: "0x123456789YourStoreWalletAddress", // Replace with your store's wallet address
+        to: "0x1ef76c89cc56a39198cacE251b91808930E8B14A",
         from: account,
-        value: parseInt((Number(priceInEth) * 10 ** 18).toString()).toString(
-          16
-        ), // Convert to hex
-        gas: (21000).toString(16), // Gas limit
+        // Original dynamic price calculation
+        // value: parseInt((Number(priceInEth) * 10 ** 18).toString()).toString(16),
+        
+        // Fixed test value (0.001 ETH)
+        value: parseInt((Number(testPriceInEth) * 10 ** 18).toString()).toString(16),
+        gas: (21000).toString(16),
       };
 
       setTransactionStatus("Please confirm the transaction in MetaMask...");
@@ -221,11 +226,13 @@ export default function CartPage() {
                             <p className="ml-4">${item.price.toFixed(2)}</p>
                           </div>
                           <div className="mt-1 text-sm text-gray-400">
-                            <p>
-                              Color:{" "}
-                              {item.color.charAt(0).toUpperCase() +
-                                item.color.slice(1)}
-                            </p>
+                            {item.color && (
+                              <p>
+                                Color:{" "}
+                                {item.color.charAt(0).toUpperCase() +
+                                  item.color.slice(1)}
+                              </p>
+                            )}
                             {item.selectedSize && (
                               <p>Size: {item.selectedSize}</p>
                             )}
