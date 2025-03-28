@@ -12,11 +12,9 @@ export function ShoppingMetaverse() {
   const clothingItems = useStore((state) => state.clothingItems);
   const [hoveredItem, setHoveredItem] = useState<ClothingItem | null>(null);
 
-  // Separate items by category
   const tShirts = clothingItems.filter((item) => item.category === "tops");
   const jeans = clothingItems.filter((item) => item.category === "bottoms");
 
-  // Handler for hover state
   const handleItemHover = (item: ClothingItem | null) => {
     setHoveredItem(item);
   };
@@ -37,7 +35,6 @@ export function ShoppingMetaverse() {
           { name: "backward", keys: ["ArrowDown", "s", "S"] },
           { name: "right", keys: ["ArrowLeft", "a", "A"] },
           { name: "left", keys: ["ArrowRight", "d", "D"] },
-          { name: "jump", keys: ["Space"] },
         ]}
       >
         <Canvas
@@ -83,7 +80,7 @@ export function ShoppingMetaverse() {
         </Canvas>
       </KeyboardControls>
 
-      {/* Item info panel when hovering over an item */}
+      {/* Item info panel when hover */}
       {hoveredItem && <ItemInfo item={hoveredItem} />}
     </div>
   );

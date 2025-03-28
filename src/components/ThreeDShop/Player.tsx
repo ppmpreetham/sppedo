@@ -11,17 +11,14 @@ export function Player() {
   const position = useStore((state) => state.user.position);
   const rotation = useStore((state) => state.user.rotation);
 
-  // Get camera and controls from three.js
   const { camera } = useThree();
 
-  // WASD controls
   const [, getKeys] = useKeyboardControls();
 
-  // Direction vector for movement
   const direction = useRef(new THREE.Vector3());
-  // Front direction (where the camera is pointing horizontally)
+  // Front direction
   const frontVector = useRef(new THREE.Vector3());
-  // Side direction (perpendicular to front)
+  // Side direction
   const sideVector = useRef(new THREE.Vector3());
 
   useFrame((state, delta) => {
@@ -32,7 +29,7 @@ export function Player() {
     frontVector.current.y = 0; // Keep movement on xz plane
     frontVector.current.normalize();
 
-    // Calculate side vector (perpendicular to forward direction)
+    // side vector (perpendicular to forward direction)
     sideVector.current.set(frontVector.current.z, 0, -frontVector.current.x);
 
     // Reset direction
@@ -44,13 +41,13 @@ export function Player() {
     if (left) direction.current.sub(sideVector.current);
     if (right) direction.current.add(sideVector.current);
 
-    // Normalize for consistent speed in all directions
+    // normalize for consistent speed in all directions
     if (direction.current.length() > 0) direction.current.normalize();
 
-    // Calculate movement distance
+    // calculate movement distance
     const moveSpeed = 5 * delta;
 
-    // Calculate new position
+    // calculate new position
     let newPosition = [...position] as [number, number, number];
 
     if (direction.current.length() > 0) {

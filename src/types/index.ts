@@ -27,6 +27,6 @@ export interface ClothingItem {
   availableSizes: string[];
   color: string;
   category: string;
-  selectedSize?: string; // Add this optional field
-  cartId?: string; // Add this optional field for unique cart identification
+  selectedSize?: string;
+  cartId?: string;
 }

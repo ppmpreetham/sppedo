@@ -3,9 +3,7 @@ import { persist } from "zustand/middleware";
 import { ClothingItem, UserState } from "@/types";
 
 interface StoreState {
-  // User state
   user: UserState;
-  // Available clothing items
   clothingItems: ClothingItem[];
   // Actions
   moveUser: (position: [number, number, number]) => void;
@@ -25,7 +23,7 @@ export const useStore = create<StoreState>()(
         rotation: 0,
         selectedItem: null,
         cartItems: [],
-        favorites: [], // New state for favorite items
+        favorites: [],
       },
       clothingItems: [
         // T-Shirts

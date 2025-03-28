@@ -103,9 +103,8 @@ export default function CartPage() {
     setTransactionStatus("Initiating transaction...");
 
     try {
-      // Original price calculation (commented out for testing)
       // const priceInEth = (totalPrice / 1500).toFixed(6); // Example conversion rate: 1 ETH = $1500 USD
-      
+
       // Fixed test amount: 0.001 ETH
       const testPriceInEth = "0.001";
 
@@ -115,9 +114,11 @@ export default function CartPage() {
         from: account,
         // Original dynamic price calculation
         // value: parseInt((Number(priceInEth) * 10 ** 18).toString()).toString(16),
-        
+
         // Fixed test value (0.001 ETH)
-        value: parseInt((Number(testPriceInEth) * 10 ** 18).toString()).toString(16),
+        value: parseInt(
+          (Number(testPriceInEth) * 10 ** 18).toString()
+        ).toString(16),
         gas: (21000).toString(16),
       };
 

@@ -19,7 +19,7 @@ export default function ProductPage() {
   const { id } = router.query;
   const clothingItems = useStore((state) => state.clothingItems);
   const addToCart = useStore((state) => state.addToCart);
-  const cartItems = useStore((state) => state.user.cartItems); // Add this line to get cart items
+  const cartItems = useStore((state) => state.user.cartItems);
 
   const [selectedSize, setSelectedSize] = useState("");
   const [product, setProduct] = useState<{
@@ -32,7 +32,7 @@ export default function ProductPage() {
     modelPath: string;
   } | null>(null);
 
-  // Find the product by ID once the query param is available
+  // Find the product by ID
   useEffect(() => {
     if (id && clothingItems.length > 0) {
       const foundProduct = clothingItems.find((item) => item.id === id);
@@ -59,10 +59,9 @@ export default function ProductPage() {
 
       addToCart(productWithSize);
 
-      // Show success message
       alert(`${product.name} added to your cart!`);
 
-      // Reset size selection (optional)
+      // Reset size selection
       setSelectedSize("");
     }
   };
@@ -94,7 +93,7 @@ export default function ProductPage() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Product details - LEFT */}
+          {/* Product details */}
           <div className="w-full lg:w-1/2 bg-gray-900 p-6 rounded-lg shadow-lg">
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
             <p className="text-2xl text-blue-400 font-semibold mb-4">
@@ -154,7 +153,7 @@ export default function ProductPage() {
             </button>
           </div>
 
-          {/* 3D Model - RIGHT */}
+          {/* 3D Model */}
           <div className="w-full lg:w-1/2 bg-gray-900 rounded-lg shadow-lg h-96 md:h-[500px]">
             <Canvas
               shadows
@@ -172,8 +171,8 @@ export default function ProductPage() {
                 <OrbitControls
                   autoRotate
                   makeDefault
-                  minPolarAngle={Math.PI / 4}
-                  maxPolarAngle={Math.PI / 1.5}
+                  minPolarAngle={Math.PI / 4} //pi/4
+                  maxPolarAngle={Math.PI / 1.5} //2pi/3
                 />
               </Suspense>
             </Canvas>

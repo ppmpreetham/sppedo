@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import "../app/globals.css";
 
-// Use dynamic import with SSR disabled for Three.js components
+// dynamic import with SSR disabled for Three.js
 const ShoppingMetaverse = dynamic(
   () =>
     import("../components/ThreeDShop/ShoppingMetaverse").then(

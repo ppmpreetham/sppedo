@@ -41,16 +41,15 @@ export function ClothingModel({
   const [hovered, setHovered] = useState(false);
   const [clonedScene] = useState(() => scene.clone());
 
-  // Create an object for smooth animation
+  // object for smooth animation
   const animatedScale = useRef({
     x: scale[0],
     y: scale[1],
     z: scale[2],
   });
 
-  // Apply color to the model right away when the component mounts
+  // color to the model right away when the component mounts
   useEffect(() => {
-    // Apply the color to the model
     if (clonedScene) {
       const colorHex = colorMap[item.color] || "#ffffff";
 
@@ -71,19 +70,19 @@ export function ClothingModel({
       });
     }
 
-    // Play animations if available
+    // animations
     if (actions && actions.idle) {
       actions.idle.play();
     }
   }, [clonedScene, item.color, actions]);
 
-  // Smooth transition for hover effect using useFrame
+  // smooth transition for hover effect
   useFrame((state, delta) => {
     if (!modelRef.current) return;
 
     const targetScale = hovered ? 1.2 : 1.0;
 
-    // Smooth interpolation for scale
+    // smooth interpolation for scale
     animatedScale.current.x = THREE.MathUtils.lerp(
       animatedScale.current.x,
       scale[0] * targetScale,
@@ -113,21 +112,18 @@ export function ClothingModel({
   const handlePointerOver = (e) => {
     e.stopPropagation();
     setHovered(true);
-    // Make sure to call onHover with the item
     if (onHover) onHover(item);
   };
 
   const handlePointerOut = (e) => {
     e.stopPropagation();
     setHovered(false);
-    // Clear the hovered item
     if (onHover) onHover(null);
   };
 
   const handleClick = (e) => {
     e.stopPropagation();
     selectItem(item);
-    // Navigate to product page with correct query parameter
     router.push(`/product?id=${item.id}`);
     if (onClick) onClick();
   };
@@ -146,6 +142,6 @@ export function ClothingModel({
   );
 }
 
-// Preload models to improve performance
+// preload models to improve performance
 useGLTF.preload("/models/tshirt.glb");
 useGLTF.preload("/models/jeans.glb");

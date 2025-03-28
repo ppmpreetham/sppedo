@@ -97,11 +97,11 @@ const Kids = () => {
           gsap.set(item, { transformOrigin: "center" });
 
           const handleItemEnter = () => {
-            gsap.to(item, { y: -5, scale: 1.05, duration: 0.3 });
+            gsap.to(item, { scale: 1.05, duration: 0.3 });
           };
 
           const handleItemLeave = () => {
-            gsap.to(item, { y: 0, scale: 1, duration: 0.3 });
+            gsap.to(item, { scale: 1, duration: 0.3 });
           };
 
           item.addEventListener("mouseenter", handleItemEnter);
