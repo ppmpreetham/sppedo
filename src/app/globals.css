@@ -19,3 +19,8 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@font-face {
+  font-family: "MURMURE";
+  src: url(../../public/fonts/le-murmure.otf) format("opentype");
+}

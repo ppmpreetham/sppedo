@@ -11,6 +11,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        murmure: ["MURMURE", "sans-serif"],
+      },
     },
   },
   plugins: [],
