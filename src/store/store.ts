@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ClothingItem, UserState } from "@/types";
+import { ClothingItem, UserState } from "../types";
 
 interface StoreState {
   user: UserState;

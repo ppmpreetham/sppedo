@@ -20,7 +20,7 @@ const Kids = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const addToCart = useStore((state) => state.addToCart);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
-  const favorites = useStore((state) => state.user.favorites);
+  const favorites = useStore((state) => state.user?.favorites || []);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
