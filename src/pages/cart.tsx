@@ -125,6 +125,9 @@ export default function CartPage() {
       setTransactionStatus("Please confirm the transaction in MetaMask...");
 
       // Send transaction
+      if (!window.ethereum) {
+        throw new Error("MetaMask is not available.");
+      }
       const txHash = await window.ethereum.request({
         method: "eth_sendTransaction",
         params: [transactionParameters],
